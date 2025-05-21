@@ -171,3 +171,39 @@ def test_model_reproducibility(sample_data, preprocessor):
     assert np.array_equal(
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
+
+def test_model_accuracy_comparison(sample_data, preprocessor):
+    """モデルの精度を比較"""
+    # データの分割
+    X = sample_data.drop("Survived", axis=1)
+    y = sample_data["Survived"].astype(int)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+
+    # モデルの作成
+    baseline = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", RandomForestClassifier(n_estimators=100, random_state=42)),
+        ]
+    )
+    new_model = Pipeline(
+        steps=[
+            ("preprocessor", preprocessor),
+            ("classifier", RandomForestClassifier(n_estimators=100, random_state=55)),
+        ]
+    )
+
+    # 学習
+    baseline.fit(X_train, y_train)
+    new_model.fit(X_train, y_train)
+
+    # 予測
+    y_pred1 = baseline.predict(X_test)
+    y_pred2 = new_model.predict(X_test)
+
+    # 精度を比較
+    accuracy1 = accuracy_score(y_test, y_pred1)
+    accuracy2 = accuracy_score(y_test, y_pred2)
+    assert accuracy1 < accuracy2

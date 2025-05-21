@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import great_expectations as gx
 from sklearn.datasets import fetch_openml
+from sklearn.ensemble import RandomForestClassifier
 import warnings
 
 # 警告を抑制
@@ -129,3 +130,4 @@ def test_value_ranges(sample_data):
         results.append(result)
         is_successful = all(result.success for result in results)
     assert is_successful, "データの値範囲が期待通りではありません"
+

@@ -172,6 +172,7 @@ def test_model_reproducibility(sample_data, preprocessor):
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
 
+
 def test_model_accuracy_comparison(sample_data, preprocessor):
     """モデルの精度を比較"""
     # データの分割
